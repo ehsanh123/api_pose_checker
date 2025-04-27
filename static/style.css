@@ -1,0 +1,60 @@
+
+        /* Overlay for pose transition */
+        #poseTransitionOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #poseTransitionOverlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #poseTransitionMessage {
+            background: #28a745;
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Pulse animation for emphasis */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Style for status element */
+        #poseStatus {
+            font-family: Arial, sans-serif;
+            font-size: 1.2rem;
+            white-space: pre-wrap;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+
+        #poseStatus.success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+    

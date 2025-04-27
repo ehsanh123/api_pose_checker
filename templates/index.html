@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Async Chatbot</title>
+    <style src = "/static/style.css">  </style>
+    
+    <script src="/static/image.js"></script>
+    
+
+    <!-- live camera running -->
+    <script src="/static/video.js"></script>
+
+    <!-- live pose detection -->
+    <script src="/static/pose.js"></script>
+    <script src="/static/angles.js"></script>
+
+
+<script>
+  
+</script>
+
+    <!-- chatbot -->
+    
+</head>
+
+
+<body>
+    <h1>AI Phsical Trainer</h1>
+    <!-- voice bot -->
+    
+    <!-- images -->
+    <h3>Refrence images</h3>
+    <canvas id="ref_img1" width="200" height="200" style="border:1px solid #000000;"></canvas>
+    <canvas id="ref_img2" width="200" height="200" style="border:1px solid #000000;"></canvas>
+
+    <input type="file" id="imageLoader" accept="image/*" style="display: none;" />
+    <br><br>
+    <button id="btn_load1" onclick="loadImage1('1')">Load Ref1</button>
+    <button id="btn_load2" onclick="loadImage1('2')">Load Ref2</button>
+    <button onclick="poseImages ()">Pose detection</button>
+
+    <div>
+        <h3>Live Camera</h3>
+
+        <input type="checkbox" id="L_Arm" name="angle" value="L_Arm">
+    <label for="L_Arm">Left Arm</label>
+
+    <input type="checkbox" id="L_Elbow" name="angle" value="L_Elbow" checked>
+    <label for="L_Elbow">Left Elbow</label>
+
+    <input type="checkbox" id="L_Back" name="angle" value="L_Back">
+    <label for="L_Back">Left Shuolder</label>
+
+    <input type="checkbox" id="L_Hip" name="angle" value="L_Hip">
+    <label for="L_Hip">Left Hip</label>
+
+    <input type="checkbox" id="L_Knee" name="angle" value="L_Knee">
+    <label for="L_Knee">Left Knee</label><br>
+
+    <input type="checkbox" id="R_Arm" name="angle" value="R_Arm">
+    <label for="R_Arm">Right Arm</label>
+
+    <input type="checkbox" id="R_Elbow" name="angle" value="R_Elbow">
+    <label for="R_Elbow">Right Elbow</label>
+
+    <input type="checkbox" id="R_Back" name="angle" value="R_Back">
+    <label for="R_Back">Right Shuolder</label>
+
+    <input type="checkbox" id="R_Hip" name="angle" value="R_Hip">
+    <label for="R_Hip">Right Hip</label>
+
+    <input type="checkbox" id="R_Knee" name="angle" value="R_Knee">
+    <label for="R_Knee">Right Knee</label>
+    <br><br>
+
+    
+
+    <video id="video" width="200" height="200" autoplay muted style="border: 1px solid #000;"></video>
+    <canvas id="image1" width="200" height="200" style="border:1px solid #000000;"></canvas>
+    <br>
+    <button onclick="startCamera()">Start Camera</button>
+    <button onclick="stopCamera()">Stop Camera</button>
+
+    
+    <p id="poseStatus">Status: Idle</p>
+
+    <button onclick="startLivePose()">Start Live Detection</button>
+    <button onclick="stopLivePose()">Stop</button>
+    <br>
+    </div>
+
+</body>
+</html>
+
+
+
+
