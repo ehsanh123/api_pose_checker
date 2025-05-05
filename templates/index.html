@@ -11,38 +11,121 @@
     <script src="/static/video.js"></script>
 
     <!-- live pose detection -->
-    <script src="/static/pose.js"></script>
+    <!-- <script src="/static/pose.js"></script> -->
+    <script>
+      let livePoseRunning = false;
+
+function startLivePose() {
+    livePoseRunning = true;
+    document.getElementById("poseStatus").innerText = "Status: Live";
+
+    const video = document.getElementById('video');
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = 400;
+    tempCanvas.height = 300;
+
+    async function loop() {
+        if (!livePoseRunning) return;
+
+        // Grab frame directly to temp canvas (NOT shown)
+        tempCtx.drawImage(video, 0, 0, tempCanvas.width, tempCanvas.height);
+        const imageData = tempCanvas.toDataURL('image/png');
+
+        await uploadAndDisplayPose(imageData);
+
+        setTimeout(() => {
+            requestAnimationFrame(loop);
+        }, 100); // ~10 FPS
+    }
+
+    loop();
+}
+
+function stopLivePose() {
+    livePoseRunning = false;
+    document.getElementById("poseStatus").innerText = "Status: Stopped";
+}
+cs = 0
+counter = 0
+max_counter = 1
+last_compare = ""
+async function uploadAndDisplayPose(imageData) {
+    const canvas = document.getElementById("image1");
+    const statusEl = document.getElementById("poseStatus");
+
+    const ctx = canvas.getContext("2d");
+    counter= counter;
+
+    value1 = calculateBinarySum();  
+    if (value1 == 0) {
+        statusEl.innerText = "Status: No angles selected";
+        return;
+    }
+    try {
+            const response = await fetch("/upload-photo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ image: imageData, 
+                    "name": "4" , "angle": value1 })});
+                    
+            const result = await response.json();
+            
+            let text = "Status:\n";
+            for (const [key, value] of Object.entries(result.angles)) {
+                text += `${key}: ${value}\n`;
+            }
+            statusEl.innerText = text;
+            
+            const img = new Image();
+            
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+
+            img.src = result.processed_image;
+            counter = 0;
+
+            
+        
+    
+    } catch (err) {
+        console.error("Pose detection failed:", err);
+        document.getElementById("poseStatus").innerText = "Status: Error";
+    }
+}
+
+////////////
+
+    </script>
     <script src="/static/angles.js"></script>
 
+    <!-- Test tuturial -->
+    <link rel="stylesheet" href="https://unpkg.com/intro.js/minified/introjs.min.css">
+    <script src="https://unpkg.com/intro.js/minified/intro.min.js">    </script>
+    <script src="/static/load_tut.js"></script>>
 
-<script>
-  
-</script>
-
-    <!-- chatbot -->
-    
 </head>
 
 
 <body>
-    <h1>AI Phsical Trainer</h1>
-    <!-- voice bot -->
-    
+    <h1 data-intro="Welcomd to AI Physical Tutorial"
+    >AI Physical Trainer</h1>
+
     <!-- images -->
+    <div id="part 1" data-intro="First You need to Load two images and save them as references">
+
     <h3>Refrence images</h3>
-    <canvas id="ref_img1" width="200" height="200" style="border:1px solid #000000;"></canvas>
-    <canvas id="ref_img2" width="200" height="200" style="border:1px solid #000000;"></canvas>
+    <button id="btn_load1" data-intro="Load the first reference image with this" onclick="loadImage1('1')">Load Ref1</button>
+    <button id="btn_load2" data-intro="Load the second reference image here" onclick="loadImage1('2')">Load Ref2</button>
+    <button onclick="poseImages()" style="background-color: black; color: white;" 
+    data-intro="Click here to pose detection and store references"> Pose Detection </button>    
 
-    <input type="file" id="imageLoader" accept="image/*" style="display: none;" />
-    <br><br>
-    <button id="btn_load1" onclick="loadImage1('1')">Load Ref1</button>
-    <button id="btn_load2" onclick="loadImage1('2')">Load Ref2</button>
-    <button onclick="poseImages ()">Pose detection</button>
-
-    <div>
-        <h3>Live Camera</h3>
-
-        <input type="checkbox" id="L_Arm" name="angle" value="L_Arm">
+    <button onclick="introJs().start();">Start Tutorial</button>        
+    <div id="part 2" data-intro="This is the pose detection part. You can select the angles you want to detect.">
+    <h4>Select Pose Angles</h4>
+    <input type="checkbox" id="L_Arm" name="angle" value="L_Arm">
     <label for="L_Arm">Left Arm</label>
 
     <input type="checkbox" id="L_Elbow" name="angle" value="L_Elbow" checked>
@@ -51,7 +134,7 @@
     <input type="checkbox" id="L_Back" name="angle" value="L_Back">
     <label for="L_Back">Left Shuolder</label>
 
-    <input type="checkbox" id="L_Hip" name="angle" value="L_Hip">
+    <input type="checkbox" id="L_Hip" name="angle" value="L_Hip" checked>
     <label for="L_Hip">Left Hip</label>
 
     <input type="checkbox" id="L_Knee" name="angle" value="L_Knee">
@@ -72,23 +155,45 @@
     <input type="checkbox" id="R_Knee" name="angle" value="R_Knee">
     <label for="R_Knee">Right Knee</label>
     <br><br>
+  </div>
 
-    
+    <canvas id="ref_img1" width="200" height="200" style="border:1px solid #000000;"></canvas>
+    <canvas id="ref_img2" width="200" height="200" style="border:1px solid #000000;"></canvas>
 
-    <video id="video" width="200" height="200" autoplay muted style="border: 1px solid #000;"></video>
-    <canvas id="image1" width="200" height="200" style="border:1px solid #000000;"></canvas>
-    <br>
-    <button onclick="startCamera()">Start Camera</button>
-    <button onclick="stopCamera()">Stop Camera</button>
-
-    
-    <p id="poseStatus">Status: Idle</p>
-
-    <button onclick="startLivePose()">Start Live Detection</button>
-    <button onclick="stopLivePose()">Stop</button>
-    <br>
+    <input type="file" id="imageLoader" accept="image/*" style="display: none;" />
     </div>
 
+
+
+    <div id="part 3" data-intro="After saving references, Start camera and live pose detection.">
+    <h3>Live Camera</h3>
+
+    <video id="video" width="200" height="200" autoplay muted style="border: 1px solid #000;"
+    data-intro="This shows the live camera feed"></video>
+    <canvas id="image1" width="200" height="200" style="border:1px solid #000000;"
+    data-intro="you will see you live pose here"></canvas>
+    <br>
+
+    <!-- Camera Controls -->
+    <button onclick="startCamera()" style="background-color: black; color: white;" 
+    data-intro="Click to start the live camera feed">Start Camera</button>
+
+    <button onclick="stopCamera()" style="margin-left: 1px;">Stop Camera</button>
+
+    <!-- Live Detection -->
+    <button onclick="startLivePose()" style="margin-left: 10px; background-color: black; color: white;" 
+    data-intro="Start real-time pose detection using the live camera feed">Start Live Detection</button>
+
+    <button onclick="stopLivePose()" style="margin-left: 1px;" >Stop Live</button>
+
+    </div>
+    <p id="poseStatus">Status: Idle</p>
+
+    
+    <br>
+    
+
+    
 </body>
 </html>
 

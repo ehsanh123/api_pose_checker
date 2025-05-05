@@ -33,7 +33,7 @@ function stopLivePose() {
 }
 cs = 0
 counter = 0
-max_counter = 5
+max_counter = 1
 last_compare = ""
 async function uploadAndDisplayPose(imageData) {
     const canvas = document.getElementById("image1");
@@ -49,32 +49,32 @@ async function uploadAndDisplayPose(imageData) {
     }
     try {
         // let response, result;
-        if(counter < max_counter) {
+        // if(counter < max_counter) {
             
-            const response = await fetch("/upload-photo", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image: imageData, 
-                    "name": "3" , "angle": value1 })});
+        //     const response = await fetch("/upload-photo", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ image: imageData, 
+        //             "name": "3" , "angle": value1 })});
 
-            const result = await response.json();
-            counter++;
+        //     const result = await response.json();
+        //     counter++;
 
-            let text = "Status:\n";
-            for (const [key, value] of Object.entries(result.angles)) {
-                text += `${key}: ${value}\n`;
-            }
-            statusEl.innerText = text;
-            comparedTo = result.angles["Compared to"];
-            if(comparedTo == "Changed"){
-                statusEl.innerText = "is Done, click again to countinure";
-                livePoseRunning = false;
-                // stopLivePose();
-            }
-            // else
-                // last_compare = comparedTo;
+        //     let text = "Status:\n";
+        //     for (const [key, value] of Object.entries(result.angles)) {
+        //         text += `${key}: ${value}\n`;
+        //     }
+        //     statusEl.innerText = text;
+        //     comparedTo = result.angles["Compared to"];
+        //     if(comparedTo == "Changed"){
+        //         statusEl.innerText = "is Done, click again to countinure";
+        //         livePoseRunning = false;
+        //         // stopLivePose();
+        //     }
+        //     // else
+        //         // last_compare = comparedTo;
 
-        } else {
+        // } else {
             const response = await fetch("/upload-photo", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -95,7 +95,7 @@ async function uploadAndDisplayPose(imageData) {
             counter = 0;
 
             
-        }
+        // }
         
     
     } catch (err) {

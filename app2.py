@@ -16,6 +16,7 @@ import base64
 ########################### === Setup server === ###########################
 
 app = FastAPI()
+app.mount("/img", StaticFiles(directory="img"), name="img")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 ################angle detection and pose detection##################
@@ -187,31 +188,6 @@ def calculate_angles_landmarks(landmarks, mp_pose):
             "right_ankle":right_ankle
         }
         return angles,locations
-
-# def get_locs_selected_angles(selected_angles, mp_pose):
-#     angle_to_points = {
-#     "L_Elbow": [mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_WRIST],
-#     "L_Hip": [mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_HIP, mp_pose.PoseLandmark.LEFT_KNEE],
-
-#     "R_Elbow": [mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_WRIST],
-#     "R_Hip": [mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP, mp_pose.PoseLandmark.RIGHT_KNEE],
-
-#     "L_Knee": [mp_pose.PoseLandmark.LEFT_KNEE, mp_pose.PoseLandmark.LEFT_ANKLE, mp_pose.PoseLandmark.LEFT_HIP],
-#     "R_Knee": [mp_pose.PoseLandmark.RIGHT_KNEE, mp_pose.PoseLandmark.RIGHT_ANKLE, mp_pose.PoseLandmark.RIGHT_HIP],
-
-#     "L_Arm": [mp_pose.PoseLandmark.LEFT_ELBOW, mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.NOSE],
-#     "R_Arm": [mp_pose.PoseLandmark.RIGHT_ELBOW, mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.NOSE],
-
-#     "L_Back": [mp_pose.PoseLandmark.LEFT_SHOULDER, mp_pose.PoseLandmark.LEFT_HIP, mp_pose.PoseLandmark.NOSE],
-#     "R_Back": [mp_pose.PoseLandmark.RIGHT_SHOULDER, mp_pose.PoseLandmark.RIGHT_HIP, mp_pose.PoseLandmark.NOSE]
-#     }
-#     needed_points = set()
-    
-#     for angle in selected_angles:
-#         points = angle_to_points.get(angle, [])
-#         needed_points.update(points)  # avoid duplicates
-    
-#     return list(needed_points)
 
 def putItems_on_image(image1,angs,locs,selected_angles,mp_pose,results):
     image = image1
